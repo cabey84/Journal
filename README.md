@@ -12,19 +12,20 @@ Takeaways:
 
 
 
-NSUSERDEFAULTS: 
+MORE ON NSUSERDEFAULTS: 
 Because Entry class objects are not plist compatible, and NSUserDefaults will only store classes that are, we have two options:
 1. Implement NSCoding to allow native saving and loading from plist objects like NSUserDefaults
 2. Add factory functions to make Dictionary representations of the object and initialize new objects with a Dictionary
-There are pros and cons to both approaches. We've opted to go with the latter because it is closer to working with network services and APIs later on in the class.
+There are pros and cons to both approaches. We've opted to go with the latter because it is closer to working with network services and APIs. 
 
+MODEL 
 1. Write a dictionaryCopy function that returns a Dictionary with keys and values matching the properties of the object.
     * note: Avoid using 'Magic Strings' in your code. Create private string keys for the class for each property that will be stored to and pulled from a Dictionary (ex. private let timeStampKey = "timestamp")
 2. Write a failable initializer that takes a Dictionary as a parameter and sets the timestamp, title, and text properties using the values from the dictionary.
     * note: Use guard let to check the optional values in the Dictionary, return nil if any of the properties are missing
     * note: There is a known bug in Swift that requires stored properties to be set even when returning nil from a faillable initializer
 
-
+MODEL CONTROLLER 
 We are now adding a layer of persistent storage, so we need to update our EntryController to load entries from NSUserDefaults on initialization, and save the entries to NSUserDefaults when they are updated.
 1. Write a method called saveToPersistentStorage() that will save the current entries array to NSUserDefaults
     * note: Map the entries array to an array of plist compatible dictionary copies
@@ -33,6 +34,9 @@ We are now adding a layer of persistent storage, so we need to update our EntryC
     * note: Use the Entry init(dictionary: Dictionary) in a Map function to turn the dictionaries into Entry class objects
 3. Call the loadFromPersistentStorage() function when the EntryController is initialized
 4. Call the saveToPersistentStorage() any time that the list of entries is modified
+
+
+
 
 
 Future Features
